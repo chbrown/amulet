@@ -21,6 +21,7 @@ mu.compile('complex.html', function (err, compiled) {
   //mu.render('complex.html', js)
   //  .on('data', function (c) { buffer += c.toString(); })
   //  .on('end', function () { console.log(buffer); });
+  console.log(compiled[0].tokens[4][4]);
   
   pump(mu.render('complex.html', js), process.stdout);
 
