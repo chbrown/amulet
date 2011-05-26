@@ -1,1 +1,1 @@
-module.exports = require('./lib/mu');
+module.exports = require(__dirname + '/lib/mu');
