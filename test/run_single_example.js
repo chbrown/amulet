@@ -14,8 +14,25 @@ var text = fs.readFileSync(path.join(mu.root, last_arg + '.txt')).toString()
 var evaluated_js = eval('(' + js + ')')
 
 var template_names = args.map(function(x) { return x + '.html' })
-// console.log('Calling mu.render from tests with: ' + template_names)
-mu.render(template_names, evaluated_js).pipe(process.stdout)
+
+pair = mu.start_render(template_names, {}, function() { 
+  //process.stdout.write('Done!')
+})
+// [0] is the stream, [1] is the controller
+
+var stream = pair[0]
+var controller = pair[1]
+stream.pipe(process.stdout)
+
+setTimeout(function() {
+  controller.add('text', 'Goodness graci---')
+}, 1500)
+
+setTimeout(function() {
+  controller.force()
+}, 3000)
+
+  // controller.force()
 
 // mu.compile(example + '.html', function (err, compiled) {
 //   if (err) {
