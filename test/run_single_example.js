@@ -1,8 +1,7 @@
 var fs     = require('fs'),
     path   = require('path'),
     util   = require('util'),
-    mu     = require('../lib/mu'),
-    pump   = require('util').pump;
+    mu     = require('../lib/mu')
 
 mu.root = path.join(__dirname, 'examples');
 
