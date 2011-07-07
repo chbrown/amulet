@@ -1,36 +1,35 @@
 var sys = require('sys')
     fs = require('fs'),
-    Path = require('path');
-var Mu = require('../lib/mu');
+    Path = require('path'),
+    mu = require('../lib/mu')
+mu.root(__dirname) // __filename
 
-Mu.templateRoot = '';
-
-var name = Path.join(Path.dirname(__filename), "../examples/complex");
-var js = fs.readFileSync(name + '.js');
-
-js = eval('(' + js + ')');
-
-sys.puts(name + '.html');
-
-Mu.compile(name + '.html', function (err, compiled) {
-  if (err) {
-    throw err;
+var complex_context = {
+  header: function() {
+    return "Colors"
+  },
+  item: [
+    {name: "red", current: true, url: "#Red"},
+    {name: "green", current: false, url: "#Green"},
+    {name: "blue", current: false, url: "#Blue"}
+  ],
+  link: function() {
+    return this["current"] !== true
+  },
+  list: function() {
+    return this.item.length !== 0
+  },
+  empty: function() {
+    return this.item.length === 0
   }
-  
-  var buffer = '';
-  compiled(js).addListener('data', function (c) { buffer += c; })
-              .addListener('end', function () { sys.puts(buffer); });
+}
 
-  var i = 0;
-  var d = new Date();
-
-  (function go() {
-    if (i++ < 1000000) {
-      compiled(js).addListener('end', function () { go(); });
-    }
-  })();
-
-  process.addListener('exit', function () {
-    sys.error("Time taken: " + ((new Date() - d) / 1000) + "secs");
-  });
-});
+var i = 0
+console.log("Starting timer...")
+console.time('Total time');
+(function next() {
+  if (i++ < 2)
+    mu.render(['complex.mu'], complex_context, null, next)
+  else
+    console.timeEnd('Total time')
+})()
