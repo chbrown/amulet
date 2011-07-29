@@ -28,8 +28,8 @@ var i = 0
 console.log("Starting timer...")
 console.time('Total time');
 (function next() {
-  if (i++ < 2)
-    mu.render(['complex.mu'], complex_context, null, next)
+  if (i++ < 1000000)
+    mu.render(['million_complex.mustache'], complex_context, null, next)
   else
     console.timeEnd('Total time')
 })()
