@@ -33,3 +33,14 @@ console.time('Total time');
   else
     console.timeEnd('Total time')
 })()
+
+
+  // var i = 0, d = new Date();
+  // (function go() {
+  //   if (i++ < RUNS) {
+  //     mu.render('complex.html', js).on('end', function () { go(); });
+  //   }
+  // }())
+  // process.addListener('exit', function () {
+  //   require('util').debug("Time taken: " + ((new Date() - d) / 1000) + "secs");
+  // });

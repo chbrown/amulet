@@ -1,24 +1,25 @@
-Mu - Mustache template compiler for Node.js
-===========================================
+# chbrown/Amulet - Mustache template compiler for Node.js
 
-Mustache is a simply awesome template language inspired by 
-[ctemplate](http://code.google.com/p/google-ctemplate/) and 
-[et](http://www.ivan.fomichev.name/2008/05/erlang-template-engine-prototype.html).
+Mustache is a simple, restricted, fast template language inspired by [ctemplate](http://code.google.com/p/google-ctemplate/). There is a great introduction to the language [here on github](http://mustache.github.com/mustache.5.html).
 
-Mu is a Mustache based template engine for Node.js. Mu compiles mustache
-templates into an extremely fast executable function.
+chbrown/Amulet itself began as a fork of the v2 branch of raycmorgan/Mu, but eventually the API changed so much, and so many Mustache-particular specificities were not followed, that I decided to rename it. Amulet implements all of the Mustache specification, except that it does not always honor the whitespace requirements, which, for the purposes of HTML, does not matter. Also, Amulet extends past the Mustache specification.
 
+## Why chbrown/Amulet when there's raycmorgan/Mu?
 
-What makes Mu cool?
--------------------
+raycmorgan/Mu is actually faster for certain benchmarks, because the template rendering itself is synchronous. Amulet does everything A.S.A.P., and so it will start rendering your templates before any of your context variables are available, only halting when it encounters a missing variable. Ever wonder why PHP appears so fast, while sucking so much at everything else? It's because PHP renders as soon as possible, so that the top 90% of the page gets rendered before some cpu-intensive bit even gets called to render the footer. That's what Amulet does, too, basically.
 
-* It is very fast
-* Supports async parsing/compiling
-* Rendering is streamed
+Still, like raycmorgan/Mu, Amulet
+* Is very fast
+* Supports asynchronous parsing and compiling
+* Renders streamingly
 
+Also, work on Mu died off in the middle of 2010, and so it has many relics from Node.js 0.3.
 
-Benchmarks
-----------
+# License
+
+MIT Licensed, 2010-2011
+
+# Benchmarks
 
 Rendering examples/complex.html.mu 1 million times yields the following results:
 
