@@ -1,9 +1,7 @@
 tests:
-  - description: Boolean
-    context:
-      name: Jim
-      age: 24
-      admin: true
+  - description: boolean
+    context: |
+      { name: "Jim", age: 24, admin: true }
     template: |
       {{#name}}{{_}}{{/name}}
       {{#age}}{{age}}{{/age}}
@@ -68,7 +66,7 @@ tests:
         first: "It worked the first time.",
         second: "And it worked the second time.",
         third: "Then, surprisingly, it worked the third time.",
-        fourth: "Fourth time also fine!."
+        fourth: "Fourth time also fine!"
       }
     template: |
       {{=<% %>=}}* <% first %>
@@ -80,16 +78,18 @@ tests:
     output: |
       * It worked the first time.
       * And it worked the second time.
-  
+      
       * Then, surprisingly, it worked the third time.
-  
-      * Fourth time also fine!.
+      
+      * Fourth time also fine!
   - description: error_not_found
     context: |
       {bar: 2}
     template: |
       {{foo}}
-    output: ""
+    output: |
+      
+      
   - description: inverted
     context: |
       {
@@ -113,7 +113,7 @@ tests:
       {
         name: 'name',
         index: 1,
-        description: 'The name game'
+        description: 'The name game',
         terms: [
           {name: 't1', index: 23},
           {name: 't2', index: 24},
