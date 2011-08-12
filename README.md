@@ -1,8 +1,8 @@
-# chbrown/Amulet - Mustache template compiler for Node.js
+# [chbrown/Amulet] - Mustache template compiler for Node.js
 
 Mustache is a simple, restricted, fast template language inspired by [ctemplate](http://code.google.com/p/google-ctemplate/). There is a great introduction to the language [here on github](http://mustache.github.com/mustache.5.html).
 
-chbrown/Amulet itself began as a fork of the v2 branch of raycmorgan/Mu, but eventually the API changed so much, and so many Mustache-particular specificities were not followed, that I decided to rename it. Amulet implements all of the Mustache specification, except that it does not always honor the whitespace requirements, which, for the purposes of HTML, does not matter. Also, Amulet extends past the Mustache specification.
+[chbrown/Amulet] itself began as a fork of the v2 branch of [raycmorgan/Mu], but eventually the API changed so much, and so many Mustache-particular specificities were not followed, that I decided to rename it. Amulet implements all of the Mustache specification, except that it does not always honor the whitespace requirements, which, for the purposes of HTML, does not matter. Also, Amulet extends past the Mustache specification.
 
 ## Why chbrown/Amulet when there's raycmorgan/Mu?
 
