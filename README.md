@@ -2,7 +2,7 @@
 
 Mustache is a simple, restricted, fast template language inspired by [ctemplate](http://code.google.com/p/google-ctemplate/). There is a great introduction to the language [here on github](http://mustache.github.com/mustache.5.html). And a nice overview of the different tags at the [ruby implementation](http://github.com/defunkt/mustache/).
 
-[chbrown/amulet](https://github.com/chbrown/amulet) itself began as a fork of the v2 branch of [raycmorgan](https://github.com/raycmorgan)'s [Mu](https://github.com/raycmorgan/Mu), but eventually the API changed so much, and so many Mustache-particular specificities were not followed, that I decided to rename it. Amulet implements all of the Mustache specification, except that it does not always honor the whitespace requirements, which, for the purposes of HTML, does not matter. Also, amulet extends past the Mustache specification.
+[amulet](https://github.com/chbrown/amulet) itself began as a fork of the v2 branch of [raycmorgan](https://github.com/raycmorgan)'s [Mu](https://github.com/raycmorgan/Mu), but eventually the API changed so much, and so many Mustache-particular specificities were not followed, that I decided to rename it. Amulet implements all of the Mustache specification, except that it does not always honor the whitespace requirements, which, for the purposes of HTML, does not matter. Also, amulet extends past the Mustache specification.
 
 ## Why [amulet](https://github.com/chbrown/amulet) when there's raycmorgan/Mu?
 

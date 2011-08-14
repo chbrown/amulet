@@ -5,12 +5,11 @@ var fs = require('fs'),
     // EventEmitter = require('events').EventEmitter,
     Buffer = require('buffer').Buffer,
     StringStream = require('./lib').StringStream,
-    exec = require('child_process').exec,
-    yaml = require('yaml');
+    exec = require('child_process').exec;
 
 // amulet.root(path.join(__dirname, 'examples'));
 var ignore_whitespace = true;
-console.log('ignore_whitespace=', ignore_whitespace);
+console.log('Simple specs: [ignore_whitespace = ' + ignore_whitespace + ']');
 
 var simple_spec = null;
 
@@ -23,7 +22,7 @@ var i = 0;
 function next() {
   if (i < simple_spec.tests.length) {
     var spec = simple_spec.tests[i++];
-    console.log('Simple spec:', spec.description);
+    process.stdout.write('  Spec: ' + spec.description + ' ');
     amulet.parseTemplate(spec.description, spec.template);
     try {
       var context = eval('(' + spec.context + ')');
@@ -32,20 +31,19 @@ function next() {
       console.error('Reading context failed', e, spec.context);
     }
 
-    var string_stream = new StringStream();
-    amulet.render(spec.description, context, string_stream, function() { // process.stdout
-      // var success = false;
-      if (string_stream.buffer == spec.output) {
-        console.log('  Succeeded:', spec.description);
+    // var string_stream = new StringStream();
+    amulet.renderString(spec.description, context, function(err, output) { // process.stdout
+      // var output = string_stream.buffer;
+      if (output == spec.output) {
+        process.stdout.write('[Success]\n');
       } 
-      else if (ignore_whitespace && string_stream.buffer.replace(/\s+/g, '') == spec.output.replace(/\s+/g, '')) {
-        console.log('  Succeeded:', spec.description);
+      else if (ignore_whitespace && output.replace(/\s+/g, '') == spec.output.replace(/\s+/g, '')) {
+        process.stdout.write('[Success]\n');
       }
       else {
-        console.log(
-          '     Failed:', spec.description,
-          '\n  Expected output:\n', spec.output,
-          '\n  Actual output:\n', string_stream.buffer);
+        process.stdout.write('[Failed]' +
+          '\n  Expected output:\n' + spec.output +
+          '\n  Actual output:\n' + output + '\n');
       }
 
       next();
