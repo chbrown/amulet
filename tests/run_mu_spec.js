@@ -78,7 +78,7 @@ function spec_repo_available() {
           renderer.stream.on('data', function(data) {
             rendered += data
           })
-          renderer.stream.on('end', function() {
+          renderer.stream.once('end', function() {
             // console.log('      string_stream ended')
           })
 

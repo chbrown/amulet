@@ -1,0 +1,1 @@
+{"tests": [{"output": "<span color=\"green\">Thanks for paying $314.15!</span>\n", "description": "function calls no. 1", "context": "{ status: 'paid', amount: '$314.15' }\n", "template": "{{#status.equals('owed')}}\n  <span color=\"red\">You owe {{amount}}</span>\n{{/}}\n{{#status.equals('paid')}}\n  <span color=\"green\">Thanks for paying {{amount}}!</span>\n{{/}}\n"}]}

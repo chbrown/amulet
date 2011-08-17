@@ -38,7 +38,7 @@ console.time('Total time');
   // var i = 0, d = new Date();
   // (function go() {
   //   if (i++ < RUNS) {
-  //     mu.render('complex.html', js).on('end', function () { go(); });
+  //     mu.render('complex.html', js).once('end', function () { go(); });
   //   }
   // }())
   // process.addListener('exit', function () {

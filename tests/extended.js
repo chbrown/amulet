@@ -5,12 +5,29 @@ var fs = require('fs'),
     Buffer = require('buffer').Buffer,
     yaml2json = require('./lib').yaml2json;
 
-// amulet.root(path.join(__dirname, 'examples'));
 var ignore_whitespace = true;
 console.log('ignore_whitespace = ' + ignore_whitespace);
 
-yaml2json('local_spec.yaml', 'local_spec.json', function() {
-  var tests = JSON.parse(fs.readFileSync('local_spec.json')).tests;
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+String.prototype.titleize = function() {
+  var result = [];
+  var parts = this.split(" ");
+  for (i in parts) {
+    result.push(capitalize(parts[i]));
+  }
+  return result.join(" ");
+};
+String.prototype.humanize = function() {
+  return titleize(this.replace('_', ' '));
+};
+String.prototype.equals = function(test) {
+  return this.valueOf() === test;
+};
+
+yaml2json('extended_spec.yaml', 'extended_spec.json', function() {
+  var tests = JSON.parse(fs.readFileSync('extended_spec.json')).tests;
   var i = 0;
   (function next() {
     if (i < tests.length) {
@@ -43,4 +60,3 @@ yaml2json('local_spec.yaml', 'local_spec.json', function() {
     }
   })();
 });
-   

@@ -29,5 +29,5 @@ Mu.render('simple.html', ctx, {chunkSize: 10}, function (err, output) {
         output.resume();
       }, 500);
     })
-    .addListener('end', function () { sys.puts("\n\nDONE"); });
+    .once('end', function () { sys.puts("\n\nDONE"); });
 });
