@@ -11,3 +11,18 @@ tests:
       {{/}}
     output: |
       <span color="green">Thanks for paying $314.15!</span>
+  - description: "string built-ins, multiple arguments"
+    context: |
+      { phrase: 'Spitting game' }
+    template: |
+      {{phrase.substring(2)}}
+      ;;
+      {{phrase.slice(9, -2)}}
+      ;;
+      {{phrase.substr(-6)}}
+    output: |
+      itting game
+      ;;
+      ga
+      ;;
+      g game
