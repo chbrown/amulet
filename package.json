@@ -1,7 +1,7 @@
 {
   "name": "amulet",
-  "description": "An as-soon-as-possible streaming asynchronous Mustache template engine for Node.js",
-  "keywords": ["template", "mustache", "asynchronous", "streaming"],
+  "description": "As-soon-as-possible streaming async Mustache templating",
+  "keywords": ["template", "mustache", "mu", "asynchronous", "streaming", "nodeps"],
   "version": "0.1.4",
   "homepage": "http://github.com/chbrown/amulet",
   "author": "Christopher Brown <io@henrian.com>",
