@@ -1,5 +1,5 @@
 tests:
-  - description: function calls no. 1
+  - description: Very basic function calls
     context: |
       { status: 'paid', amount: '$314.15' }
     template: |
@@ -11,7 +11,7 @@ tests:
       {{/}}
     output: |
       <span color="green">Thanks for paying $314.15!</span>
-  - description: "string built-ins, multiple arguments"
+  - description: String built-ins with multiple arguments
     context: |
       { phrase: 'Spitting game' }
     template: |
@@ -19,10 +19,54 @@ tests:
       ;;
       {{phrase.slice(9, -2)}}
       ;;
-      {{phrase.substr(-6)}}
+      {{#phrase}}
+        {{_.substr(-6)}}
+      {{/phrase}}
     output: |
       itting game
       ;;
       ga
       ;;
       g game
+  - description: Scalar sections
+    context: |
+      { animals: [
+          {type: 'dog', color: 'Black', sound: 'Bark!'},
+          {type: 'cat', color: 'White' }
+        ],
+        keeper: {name: 'Bob', nonspecializiation: 'dogs'}
+      }
+    template: |
+      {{#animals}}
+        Type: {{type}}
+        -->
+        {{#sound}}
+          Sound: {{_}}
+        {{/}}
+        {{^sound}}
+          [Silent]
+        {{/}}
+      {{/}}
+      Keeper; {{keeper.name}}
+      {{#keeper.specializiation}}
+        Specialization: {{_}}
+      {{/}}
+    output: |
+      Type: dog
+      -->
+        Sound: Bark!
+      Type: cat
+      -->
+        [Silent]
+      Keeper; Bob
+  - description: Dynamic function arguments
+    context: |
+      { number: 3.141592654, precision: 2 }
+    template: |
+      {{number.toFixed(precision)}}
+      ;;
+      {{number.toFixed(5)}}
+    output: |
+      3.14
+      ;;
+      3.14159
