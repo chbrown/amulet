@@ -3,7 +3,9 @@
   "description": "As-soon-as-possible streaming async Mustache templating",
   "keywords": ["template", "mustache", "mu", "asynchronous", "streaming", "nodeps"],
   "version": "0.1.6",
+  "repository": { "type": "git", "url": "http://github.com/chbrown/amulet.git" },
   "homepage": "http://github.com/chbrown/amulet",
   "author": "Christopher Brown <io@henrian.com>",
   "main": "./lib/amulet.js"
 }
+
