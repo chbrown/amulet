@@ -1,4 +1,4 @@
 .DS_Store
 test/spec/
+node_modules/
 notes.txt
-

@@ -1,75 +1,68 @@
 var fs = require('fs'),
-    amulet = require('../lib/amulet'),
-    yaml2json = require('./lib').yaml2json,
-    ignore_whitespace = false;
+    yaml = require('js-yaml');
+    amulet = require('../lib/main'),
+    argv = require('optimist').argv;
 
-function test_yaml_spec(yaml_filepath) {
-  var json_filepath = yaml_filepath.replace(/\.yaml$/, '.json');
-  yaml2json(yaml_filepath, json_filepath, function() {
-    var tests = JSON.parse(fs.readFileSync(json_filepath)).tests;
-    var successes = 0;
-    (function next(index) {
-      var spec = tests[index], context;
-      if (spec) {
-        process.stdout.write('  Spec: ' + spec.description + ' ');
-        amulet.parseTemplate(spec.description, spec.template);
+var ignore_whitespace = argv['ignore-whitespace'] === undefined ? false : argv['ignore-whitespace'];
 
-        try {
-          context = eval('(' + spec.context + ')');
-        }
-        catch (e) {
-          console.error('Reading context failed', e, spec.context);
-        }
+function testSpec(yaml_filepath) {
+  var tests = yaml.load(fs.readFileSync(yaml_filepath, 'utf8')).tests;
+  var successes = 0, total = tests.length;
+  (function next() {
+    var spec = tests.shift(), context;
+    if (spec) {
+      process.stdout.write('  Spec: ' + spec.description + ' ');
+      amulet.parseTemplate(spec.description, spec.template);
 
-        amulet.renderString(spec.description, context, function(err, output) {
-          var matches = output == spec.output;
-          if (ignore_whitespace)
-            matches = matches || (output.replace(/\s+/g, '') == spec.output.replace(/\s+/g, ''));
-          
-          if (matches) {
-            successes++;
-            process.stdout.write('[Success]\n'); 
-          }
-          else {
-            process.stdout.write('[Failed]\n  Expected:\n' + spec.output + '\n  Actual:\n' + output + '\n');
-          }
-          
-          next(index + 1);
-        });
+      try {
+        context = eval('(' + spec.context + ')');
       }
-      else {
-        console.log('Done. ' + parseInt((successes / index) * 100) + '% success rate.');
+      catch (e) {
+        console.error('Reading context failed', e, spec.context);
       }
-    })(0);
-  });
+
+      amulet.renderString(spec.description, context, function(err, output) {
+        var matches = output == spec.output;
+        if (ignore_whitespace && !matches)
+          matches = output.replace(/\s+/g, '') == spec.output.replace(/\s+/g, '');
+
+        if (matches) {
+          successes++;
+          process.stdout.write('[Success]\n');
+        }
+        else {
+          process.stdout.write('[Failed]\n  Expected:\n' + spec.output + '\n  Actual:\n' + output + '\n');
+        }
+
+        next();
+      });
+    }
+    else {
+      console.log('Done. ' + parseInt((successes / total) * 100, 10) + '% success rate.');
+    }
+  })();
 }
 
-if (process.argv.indexOf('--ignore') > -1 || process.argv.indexOf('--ignore-whitespace') > -1) {
-  ignore_whitespace = true;
-}
-
-if (process.argv.indexOf('--extended') > -1) {
+if (argv.extended) {
   String.prototype.capitalize = function() {
       return this.charAt(0).toUpperCase() + this.slice(1);
   };
   String.prototype.titleize = function() {
     var result = [];
     var parts = this.split(" ");
-    for (i in parts) {
-      result.push(capitalize(parts[i]));
+    for (var ii in parts) {
+      result.push(capitalize(parts[ii]));
     }
     return result.join(" ");
   };
   String.prototype.humanize = function() {
-    return titleize(this.replace('_', ' '));
+    return titleize(this.replace(/_/g, ' '));
   };
   String.prototype.equals = function(test) {
     return this.valueOf() === test;
   };
-
-  test_yaml_spec('extended_spec.yaml')
+  testSpec('extended_spec.yaml');
 }
 else {
-  test_yaml_spec('local_spec.yaml')
+  testSpec('local_spec.yaml');
 }
-
