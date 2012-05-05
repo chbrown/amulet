@@ -19,15 +19,3 @@ Also, work on [Mu](https://github.com/raycmorgan/Mu) died off in the middle of 2
 # License
 
 MIT Licensed, 2010-2011
-
-
-var mu = require('./mu');
-
-var input = '';
-
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
-process.stdin.on('data', function(chunk) {
-  input += chunk;
-});
-process.stdin.once('end', function() {
