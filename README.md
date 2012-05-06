@@ -39,9 +39,7 @@ Amulet attempts/intends to implement all of the Mustache specification, except t
 	  if (req.url === '/fib') {
 	    res.writeHead(200, {'Content-Type': 'text/html'});
 	    var context = {header: 'Fibonacci sequence', spacer: spacer};
-	    var amulet_args = {templates: ['layout.mu', 'fib.mu'],
-	      context: context, asap: true};
-	    var renderer = amulet.render(res, amulet_args);
+	    var renderer = amulet.render(res, ['layout.mu', 'fib.mu'], context, true);
 	    var a = 0, b = 1, c = -1, i = 0;
 	    (function next() {
 	      for (var j = 0; j < 500000; j++) {
@@ -64,11 +62,49 @@ Amulet attempts/intends to implement all of the Mustache specification, except t
 	    })();
 	  }
 	  else {
-	    amulet.render(res, {templates: ['layout.mu', 'hello.mu']});
+	    amulet.render(res, ['layout.mu', 'hello.mu']);
 	  }
 	}).listen(8080);
 
 This example code can be found in `example/`
+
+The main function, `amulet.render`, can be called in a few variations. The basic signature is `function(output, templates, context, asap, callback)`, but a number of the arguments are optional (`output` is the only required argument):
+
+With callback:
+
+    amulet.render(res, ['layout.mu', 'page.mu'], context, true, function() {
+        console.log("Done rendering!");
+    });
+
+`asap` defaults to false:
+
+    amulet.render(res, 'static.mu', function() { console.log("Done!"); });
+
+With single template:
+
+    var renderer = amulet.render(res, 'one.mu', {first: 'Chris'}, true);
+
+`amulet.render` always returns a Renderer object, which is useful if you want a way to add context or force it to end.
+
+*one.mu*
+    
+    <h3>{{first}} {{last}}</h3>
+    <p>{{description}}</p>
+
+*app.js (snippet)*:
+
+    renderer.extendContext({last: 'Brown'});
+
+At this point, the renderer would output up to the `<p>`
+and then pause, waiting for the description variable to be filled.
+But if you decide you want it to skip over the missing variables,
+as any basic Mustache spec would do:
+
+    renderer.force();
+
+Which sets `asap` to false, and immediately streams through the rest of your template.
+
+
 
 ## Why Amulet when there's [Mu](https://github.com/raycmorgan/Mu)?
 

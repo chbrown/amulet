@@ -1,12 +1,10 @@
-var amulet = require('../lib/main.js');
+var amulet = require('../lib/render.js');
 var spacer = (new Array(100)).join('&nbsp;');
 require('http').createServer(function(req, res) {
   if (req.url === '/fib') {
     res.writeHead(200, {'Content-Type': 'text/html'});
     var context = {header: 'Fibonacci sequence', spacer: spacer};
-    var amulet_args = {templates: ['layout.mu', 'fib.mu'],
-      context: context, asap: true};
-    var renderer = amulet.render(res, amulet_args);
+    var renderer = amulet.render(res, ['layout.mu', 'fib.mu'], context, true);
     var a = 0, b = 1, c = -1, i = 0;
     (function next() {
       for (var j = 0; j < 500000; j++) {
@@ -29,6 +27,6 @@ require('http').createServer(function(req, res) {
     })();
   }
   else {
-    amulet.render(res, {templates: ['layout.mu', 'hello.mu']});
+    amulet.render(res, ['layout.mu', 'hello.mu']);
   }
 }).listen(8080);
