@@ -1,6 +1,6 @@
 {
   "name": "amulet",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "As-soon-as-possible streaming async Mustache templating",
   "keywords": ["template", "mustache", "mu", "asynchronous", "streaming", "nodeps"],
   "homepage": "http://github.com/chbrown/amulet",
@@ -17,7 +17,7 @@
     "email": "io@henrian.com",
     "url": "http://henrian.com"
   },
-  "main": "./lib/render.js",
+  "main": "./lib/rendering.js",
   "devDependencies": {
     "optimist": "x.x.x",
     "js-yaml": "0.x.x"
