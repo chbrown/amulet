@@ -132,7 +132,7 @@ Amulet is Mustache and then some:
 
 If a method is in global scope, you can pipe a variable through it:
 
-	<pre>{{doc | JSON.stringify}}</pre>
+	<pre>{{{doc | JSON.stringify}}}</pre>
 
 Which would return something like 
 
@@ -154,7 +154,7 @@ You can just dot a path. Like javascript.
 	
 ### DRY
 
-Don't repeat yourself; namely, don't use XML-type redundancy. A Mustache template is a directed acyclic graph (DAG), meaning that a closing node is never ambiguous. You needn't tell the parser what you're closing in Amulet. It already knows.
+Don't repeat yourself; namely, don't use XML-type redundancy. A Mustache template is a directed acyclic graph (DAG), i.e. a tree, meaning that a closing node is never ambiguous. You needn't tell the Amulet parser what you're closing. It already knows.
 
 	{{#obj}}
 		{{#prop}}
@@ -180,7 +180,7 @@ Output of `amulet.render(response, ['layout.mu', 'index.mu'])`:
 	<!DOCTYPE html>
 	<p>Just the facts.</p>
 	
-To make it easier to remember what `<` does, you can also write `{{<yield}}` or even `{{<yield/>}}` to make your syntax highlighter happy.
+To make it easier to remember what `<` does, you can also write `{{<yield}}` or even `{{<yield/>}}` to make your syntax highlighter happy. As soon as the parser sees the `<` character, it will skip to the end of the mustache tag.
 
 ### Arrows
 
@@ -190,9 +190,16 @@ To keep better track of scope, you can name your sectioned variables with the `-
 		{{person.first_name}}
 	{{/}}
 
+Otherwise, you can access the local scope nakedly or with a `_`:
+
+  {{#people}}
+    {{_.first_name}}
+    {{last_name}}
+  {{/}}
+
 
 # License
 
-MIT Licensed, 2010-2011
+MIT Licensed, 2010-2012
 
 See <https://github.com/chbrown/amulet/blob/master/LICENSE>
