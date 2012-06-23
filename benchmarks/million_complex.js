@@ -1,4 +1,4 @@
-var sys = require('sys')
+var util = require('util')
     fs = require('fs'),
     Path = require('path'),
     mu = require('../lib/mu')
