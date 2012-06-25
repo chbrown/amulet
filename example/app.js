@@ -1,4 +1,4 @@
-var amulet = require('../lib/render.js');
+var amulet = require('../lib/rendering.js');
 var spacer = (new Array(100)).join('&nbsp;');
 require('http').createServer(function(req, res) {
   if (req.url === '/fib') {
