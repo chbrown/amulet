@@ -34,7 +34,7 @@
 
 // node.js sucks at reading yaml
 // exports.yaml2json = function(yaml, json, callback) {
-//   if (!path.existsSync(json)) {
+//   if (!fs.existsSync(json)) {
 //     console.log("Json doesn't exist. Converting.");
 //     return exec('yaml2json ' + yaml + ' > ' + json, callback);
 //   }

@@ -93,7 +93,7 @@ function test() {
   })();
 }
 
-if (path.existsSync(path.join(__dirname, 'mustache', 'specs', '.git'))) {
+if (fs.existsSync(path.join(__dirname, 'mustache', 'specs', '.git'))) {
   console.log("Updating spec repo with git pull");
   exec('git pull', { cwd: spec_repo_path, env: process.env }, test);
 }
