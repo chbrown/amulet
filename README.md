@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/chbrown/amulet.png)](http://travis-ci.org/chbrown/amulet)
 # Amulet - Mustache templating for Node.js
 
 Mustache is a simple, restricted, fast template language inspired by [ctemplate](http://code.google.com/p/google-ctemplate/). There is a great introduction to the language [here on github](http://mustache.github.com/mustache.5.html). And a nice overview of the different tags at the [ruby implementation](http://github.com/defunkt/mustache/).
