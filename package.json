@@ -19,8 +19,9 @@
   },
   "main": "./lib/rendering.js",
   "devDependencies": {
-    "optimist": "x.x.x",
-    "js-yaml": "0.x.x"
+    "optimist": "*",
+    "async": "*",
+    "js-yaml": "*"
   },
   "scripts": {
     "test": "./tests/test.js"

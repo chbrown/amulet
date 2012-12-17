@@ -1,9 +1,7 @@
 var fs = require('fs'),
     yaml = require('js-yaml');
-    amulet = require('../lib/main'),
-    argv = require('optimist').argv;
-
-var ignore_whitespace = argv['ignore-whitespace'] === undefined ? false : argv['ignore-whitespace'];
+    amulet = require('../lib/rendering'),
+    argv = require('optimist').default({'ignore-whitespace': false}).argv;
 
 function testSpec(yaml_filepath) {
   var tests = yaml.load(fs.readFileSync(yaml_filepath, 'utf8')).tests;
@@ -23,7 +21,7 @@ function testSpec(yaml_filepath) {
 
       amulet.renderString(spec.description, context, function(err, output) {
         var matches = output == spec.output;
-        if (ignore_whitespace && !matches)
+        if (argv['ignore-whitespace'] && !matches)
           matches = output.replace(/\s+/g, '') == spec.output.replace(/\s+/g, '');
 
         if (matches) {
