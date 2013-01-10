@@ -3,7 +3,7 @@ tests:
     context: |
       { name: "Jim", age: 24, admin: true }
     template: |
-      {{#name}}{{_}}{{/name}}
+      {{#name}}{{.}}{{/name}}
       {{#age}}{{age}}{{/age}}
       {{#admin}}admin{{/admin}}
     output: |
@@ -23,36 +23,27 @@ tests:
         header: function() {
           return "Colors";
         },
-        item: [
-            {name: "red", current: true, url: "#Red"},
-            {name: "green", current: false, url: "#Green"},
-            {name: "blue", current: false, url: "#Blue"}
-        ],
-        link: function() {
-          return this["current"] !== true;
-        },
-        list: function() {
-          return this.item.length !== 0;
-        },
-        empty: function() {
-          return this.item.length === 0;
-        }
+        links: [
+          {name: "red",   current: true,  url: "#Red"},
+          {name: "green", current: false, url: "#Green"},
+          {name: "blue",  current: false, url: "#Blue"}
+        ]
       }
     template: |
       <h1>{{header}}</h1>
-      {{#list}}
-        <ul>
-          {{#item}}
-            {{#current}}
-              <li><strong>{{name}}</strong></li>
-            {{/current}}
-            {{#link}}
-              <li><a href="{{url}}">{{name}}</a></li>
-            {{/link}}
-          {{/item}}
-        </ul>
-      {{/list}}
-      {{#empty}}<p>The list is empty.</p>{{/empty}}
+      <ul>
+        {{#links}}
+          {{#current}}
+            <li><strong>{{name}}</strong></li>
+          {{/}}
+          {{^current}}
+            <li><a href="{{url}}">{{name}}</a></li>
+          {{/}}
+        {{/}}
+      </ul>
+      {{^links}}
+        <p>The list is empty.</p>
+      {{/}}
     output: |
       <h1>Colors</h1>
         <ul>
@@ -78,9 +69,9 @@ tests:
     output: |
       * It worked the first time.
       * And it worked the second time.
-      
+
       * Then, surprisingly, it worked the third time.
-      
+
       * Fourth time also fine!
   - description: error_not_found
     context: |
@@ -88,8 +79,8 @@ tests:
     template: |
       {{foo}}
     output: |
-      
-      
+
+
   - description: inverted
     context: |
       {
@@ -99,7 +90,7 @@ tests:
       {{#admin}}Admin.{{/admin}}
       {{^admin}}Not Admin.{{/admin}}
     output: |
-  
+
       Not Admin.
   - description: two_in_a_row
     context: |
@@ -129,7 +120,7 @@ tests:
     output: |
       name:1
       The name game
-  
+
         t1:23
         The name game
         t2:24
@@ -154,7 +145,7 @@ tests:
         name: "Chris",
         value: 10000,
         taxed_value: function () {
-          return this.value - (this.value * 0.4);
+          return 10000 - (10000 * 0.4);
         },
         in_ca: true
       }
@@ -167,7 +158,7 @@ tests:
     output: |
       Hello Chris
       You have just won $10000!
-      
+
       Well, $6000, after taxes.
   - description: reuse_of_enumerables
     context: |
@@ -180,7 +171,7 @@ tests:
         {{name}} / {{index}}
       {{/terms}}
     output: |
-  
+
         t1 + 0
         t2 + 1
         t1 / 0
@@ -193,5 +184,77 @@ tests:
         Name: {{name}}
       {{/person}}
     output: |
-  
+
         Name: Chris
+extended_tests:
+  - description: Very basic function calls
+    context: |
+      { status: 'paid', amount: '$314.15' }
+    template: |
+      {{#status.equals('owed')}}
+        <span color="red">You owe {{amount}}</span>
+      {{/}}
+      {{#status.equals('paid')}}
+        <span color="green">Thanks for paying {{amount}}!</span>
+      {{/}}
+    output: |
+      <span color="green">Thanks for paying $314.15!</span>
+  - description: String built-ins with multiple arguments
+    context: |
+      { phrase: 'Spitting game' }
+    template: |
+      {{phrase.substring(2)}}
+      ;;
+      {{phrase.slice(9, -2)}}
+      ;;
+      {{#phrase}}
+        {{_.substr(-6)}}
+      {{/phrase}}
+    output: |
+      itting game
+      ;;
+      ga
+      ;;
+      g game
+  - description: Scalar sections
+    context: |
+      { animals: [
+          {type: 'dog', color: 'Black', sound: 'Bark!'},
+          {type: 'cat', color: 'White' }
+        ],
+        keeper: {name: 'Bob', nonspecializiation: 'dogs'}
+      }
+    template: |
+      {{#animals}}
+        Type: {{type}}
+        -->
+        {{#sound}}
+          Sound: {{_}}
+        {{/}}
+        {{^sound}}
+          [Silent]
+        {{/}}
+      {{/}}
+      Keeper; {{keeper.name}}
+      {{#keeper.specializiation}}
+        Specialization: {{_}}
+      {{/}}
+    output: |
+      Type: dog
+      -->
+        Sound: Bark!
+      Type: cat
+      -->
+        [Silent]
+      Keeper; Bob
+  - description: Dynamic function arguments
+    context: |
+      { number: 3.141592654, precision: 2 }
+    template: |
+      {{number.toFixed(precision)}}
+      ;;
+      {{number.toFixed(5)}}
+    output: |
+      3.14
+      ;;
+      3.14159
