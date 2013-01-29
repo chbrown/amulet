@@ -1,6 +1,6 @@
 {
   "name": "amulet",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "As-soon-as-possible streaming async Mustache templating",
   "keywords": ["template", "mustache", "mu", "asynchronous", "streaming", "nodeps"],
   "homepage": "http://github.com/chbrown/amulet",
