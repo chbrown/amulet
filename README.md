@@ -198,8 +198,6 @@ Otherwise, you can access the local scope nakedly or with a `_`:
     {{/}}
 
 
-# License
+## License
 
-MIT Licensed, 2010-2012
-
-See <https://github.com/chbrown/amulet/blob/master/LICENSE>
+Copyright © 2011–2013 Christopher Brown. [MIT Licensed](LICENSE).

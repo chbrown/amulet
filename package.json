@@ -19,11 +19,8 @@
     "type": "git",
     "url": "http://github.com/chbrown/amulet.git"
   },
-  "author": {
-    "name": "Christopher Brown",
-    "email": "io@henrian.com",
-    "url": "http://henrian.com"
-  },
+  "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
+  "license": "MIT",
   "main": "./lib/rendering.js",
   "devDependencies": {
     "optimist": "*",
