@@ -1,4 +1,5 @@
-tests:
+---
+basic:
   - description: boolean
     context: |
       { name: "Jim", age: 24, admin: true }
@@ -186,7 +187,7 @@ tests:
     output: |
 
         Name: Chris
-extended_tests:
+extended:
   - description: Very basic function calls
     context: |
       { status: 'paid', amount: '$314.15' }
@@ -207,9 +208,7 @@ extended_tests:
       ;;
       {{phrase.slice(9, -2)}}
       ;;
-      {{#phrase}}
-        {{_.substr(-6)}}
-      {{/phrase}}
+      {{phrase.substr(-6)}}
     output: |
       itting game
       ;;
@@ -229,7 +228,7 @@ extended_tests:
         Type: {{type}}
         -->
         {{#sound}}
-          Sound: {{_}}
+          Sound: {{.}}
         {{/}}
         {{^sound}}
           [Silent]
@@ -237,7 +236,7 @@ extended_tests:
       {{/}}
       Keeper; {{keeper.name}}
       {{#keeper.specializiation}}
-        Specialization: {{_}}
+        Specialization: {{.}}
       {{/}}
     output: |
       Type: dog

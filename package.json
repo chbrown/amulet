@@ -10,24 +10,25 @@
     "streaming",
     "nodeps"
   ],
-  "homepage": "http://github.com/chbrown/amulet",
+  "homepage": "https://github.com/chbrown/amulet",
   "bugs": {
-    "url": "http://github.com/chbrown/amulet/issues",
+    "url": "https://github.com/chbrown/amulet/issues",
     "email": "Christopher Brown <io@henrian.com>"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/chbrown/amulet.git"
+    "url": "git://github.com/chbrown/amulet.git"
   },
   "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
   "license": "MIT",
-  "main": "./lib/rendering.js",
+  "main": "index.js",
   "devDependencies": {
-    "optimist": "*",
     "async": "*",
-    "js-yaml": "*"
+    "js-yaml": "*",
+    "optimist": "~0.5",
+    "tap": "~0.4"
   },
   "scripts": {
-    "test": "./tests/test.js"
+    "test": "tap test"
   }
 }
