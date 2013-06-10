@@ -1,85 +1,5 @@
 'use strict'; /*jslint node: true, es5: true, indent: 2 */
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
-
-// Items in the cache are keyed by filepath, relative to SETTINGS.root or absolute,
-//   based on whether the given filepath starts with a '/' or not.
-var CACHE = {};
-var SETTINGS = {}; // root: process.cwd()
-// Hits the in-Node cache to see if the template exists. If it does, this'll
-// call the callback pretty quickly, but if there's a cache miss, it'll have
-// to read the file and then parse it (compileFilename).
-var emptyCache = exports.emptyCache = function() {
-  CACHE = {};
-};
-var hitCache = exports.hitCache = function(name, callback) {
-  if (CACHE[name] === undefined) {
-    // console.warn('Failed to get', name, 'from the cache... parsing.');
-    var fullpath = name[0] === '/' ? name : path.join(SETTINGS.root, name);
-    var file_contents = '';
-    fs.readFile(fullpath, 'utf8', function(err, file_contents) {
-      if (err) {
-        console.error('Cannot find', name, '... using the empty string instead.');
-        file_contents = ''; // xxx: is this correct behavior?
-      }
-      var template = parseTemplate(name, file_contents);
-      callback(err, template);
-    });
-  }
-  else {
-    // force this to be truly async
-    process.nextTick(function() {
-      callback(null, CACHE[name]);
-    });
-  }
-};
-function set(key, val) {
-  if (key === 'root') {
-    // This is synchronous
-    SETTINGS.root = val;
-    process.nextTick(function() {
-      resetCache(val, '.');
-    });
-  }
-  else {
-    SETTINGS[key] = val;
-  }
-}
-exports.set = function(obj, val) {
-  if (val) {
-    set(obj, val);
-  }
-  else {
-    for (var key in obj) {
-      set(key, obj[key]);
-    }
-  }
-};
-function resetCache(root, relative, callback) {
-  // this RECURSES through the paths below ROOT, asynchronously,
-  //   and parses them as templates, if they end with .mu
-  var files = fs.readdirSync(path.join(root, relative));
-  files.forEach(function(file) {
-    var subrelative = path.join(relative, file),
-        fullpath = path.join(root, subrelative),
-        stats = fs.statSync(fullpath);
-    if (stats.isDirectory())
-      // recurse into sub-directory
-      resetCache(root, subrelative);
-    else if (file.match(/\.mu$/)) {
-      var file_contents = fs.readFileSync(fullpath, 'utf8');
-      parseTemplate(subrelative, file_contents);
-    }
-  });
-}
-
-function escapeRegExp(string){
-  // from MDN
-  return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
-}
-
-function parseSectionExpression(expression, type) {
+function _parseSectionExpression(expression, type) {
   // returns a node, with {t: @type, val: 'something', sub: '_'}
   // or "thing" if you call it with expression = "something => thing"
   var node = {t: type, val: expression};
@@ -94,9 +14,8 @@ function parseSectionExpression(expression, type) {
 }
 
 // Compiles a file. The result will be cached as the filename and can be rendered via that name.
-var parseTemplate = exports.parseTemplate = function(template_name, template_string) {
+module.exports = function(template_string, minify) {
   var index = 0; // pointer to position in template
-  // var state = 'raw'; // ('raw'|'mustache'|'eos')
   var open_tag = '{{';
   var close_tag = '}}';
 
@@ -112,7 +31,7 @@ var parseTemplate = exports.parseTemplate = function(template_name, template_str
     if (next_mustache === -1) next_mustache = undefined;
 
     var raw = template_string.substring(index, next_mustache);
-    if (SETTINGS.minify) {
+    if (minify) {
       raw = raw.replace(/>\s+</g, '><').replace(/^\s+</, '<').replace(/>\s+$/, '>').replace(/^\s+$/, ' ');
     }
     index = next_mustache;
@@ -164,11 +83,11 @@ var parseTemplate = exports.parseTemplate = function(template_name, template_str
       push({t: 'yield', val: expression});
     }
     else if (signal == '#') {
-      push(parseSectionExpression(expression, 'section'));
+      push(_parseSectionExpression(expression, 'section'));
       stack.push([]);
     }
     else if (signal == '^') {
-      push(parseSectionExpression(expression, '!section'));
+      push(_parseSectionExpression(expression, '!section'));
       stack.push([]);
     }
     else if (signal == '/') {
@@ -197,13 +116,11 @@ var parseTemplate = exports.parseTemplate = function(template_name, template_str
     //   (that is, act like asap=false for this variable, even if asap=true at the renderer level)
 
     // this.buffer_string = this.buffer_string.substring(index + close_tag_length);
-    // this.state = 'raw'; // send to
     scanRaw();
   };
 
   scanRaw();
   // assert stack.length == 1 ?
 
-  CACHE[template_name] = root;
   return root;
 };

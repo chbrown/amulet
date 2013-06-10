@@ -198,6 +198,12 @@ Otherwise, you can access the local scope nakedly or with a `_`:
     {{/}}
 
 
+## TODO
+
+* Implement ability to add templates asap-ly, so that the first one
+  can start rendering without its yield being specified yet.
+
+
 ## License
 
 Copyright © 2011–2013 Christopher Brown. [MIT Licensed](LICENSE).

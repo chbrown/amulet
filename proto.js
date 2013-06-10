@@ -3,9 +3,17 @@ var base_proto = ({}).__proto__;
 // base_proto.__proto__ === null
 
 exports.push = function(object, new_proto) {
-  // truncate the object to it's top properties if it doesn't have a __depth indicator
-  object.__depth = object.__depth || 0;
-  // console.log('Pushing. Depth at:', object, new_proto);
+  // measure how deep the object goes if it doesn't have a __depth indicator
+  if (!object.__depth) {
+    var current = object.__proto__;
+    for (var i = 0; i < 8; i++) {
+      if (current === base_proto) {
+        object.__depth = i;
+        break;
+      }
+      current = current.__proto__;
+    }
+  }
   // don't store the object(.__proto__)+ that gets replaced, since we're assuming it === base_proto
   switch (object.__depth) {
     case 0: object.__proto__ = new_proto; break;
@@ -16,7 +24,7 @@ exports.push = function(object, new_proto) {
     case 5: object.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__ = new_proto; break;
     case 6: object.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__ = new_proto; break;
     case 7: object.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__.__proto__ = new_proto; break;
-    default: console.log("pushProto doesn't handle protos that deep. Sry!"); break;
+    default: console.error("pushProto doesn't handle protos that deep. Sry!"); break;
   }
   object.__depth++;
 };
@@ -35,13 +43,4 @@ exports.pop = function(object) {
     default: console.log("popProto doesn't handle protos that deep."); break;
   }
   object.__depth--;
-};
-
-// shallow copy
-exports.extend = function(destination, source) {
-  for (var key in source) {
-    if (source.hasOwnProperty(key) && !(key in destination)) {
-      destination[key] = source[key];
-    }
-  }
 };
