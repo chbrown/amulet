@@ -58,7 +58,11 @@ function dottedEval(context, expression) {
       var part = parts[i];
       var subcontext = evaluations[length - i];
       var value = (subcontext !== undefined && subcontext !== null) ? subcontext[part] : null;
-      if (value === null && GLOBALS[part] !== undefined) value = GLOBALS[part];
+      if (value === null || value === undefined) {
+        if (GLOBALS[part] !== undefined) {
+          value = GLOBALS[part];
+        }
+      }
       evaluations[length - i - 1] = value;
     }
   }
