@@ -1,7 +1,7 @@
 {
   "name": "amulet",
   "version": "0.3.1",
-  "description": "As-soon-as-possible streaming async Mustache templating",
+  "description": "As-soon-as-possible streaming async mustache templating",
   "keywords": [
     "template",
     "mustache",
@@ -22,10 +22,7 @@
   "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
   "license": "MIT",
   "devDependencies": {
-    "async": "*",
-    "js-yaml": "*",
-    "optimist": "~0.5",
-    "tap": "~0.4"
+    "tap": "*"
   },
   "scripts": {
     "test": "tap test"

@@ -1,0 +1,6 @@
+{ animals: [
+    {type: 'dog', color: 'Black', sound: 'Bark!'},
+    {type: 'cat', color: 'White' }
+  ],
+  keeper: {name: 'Bob', nonspecializiation: 'dogs'}
+}

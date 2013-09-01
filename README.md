@@ -204,6 +204,13 @@ Otherwise, you can access the local scope nakedly or with a `_`:
   can start rendering without its yield being specified yet.
 
 
+## Testing
+
+Just run `tap test` in the package's root directory after installing.
+
+There are 14 failing tests right now, but it's not a big deal, since those are all edge cases of the full Mustache spec.
+
+
 ## License
 
 Copyright © 2011–2013 Christopher Brown. [MIT Licensed](LICENSE).

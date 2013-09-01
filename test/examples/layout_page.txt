@@ -1,4 +1,0 @@
-<h1>Header</h1>
-<div>Page content.</div>
-<div>Hello there.</div>
-<h6>Footer</h6>

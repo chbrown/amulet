@@ -1,0 +1,9 @@
+{
+  name: 'name',
+  index: 1,
+  description: 'The name game',
+  terms: [
+    {name: 't1', index: 23},
+    {name: 't2', index: 24},
+  ]
+}
