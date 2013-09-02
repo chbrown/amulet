@@ -30,11 +30,6 @@ function runSpec(spec, t, callback) {
       // t.notOk(err, test.name + ': amulet.string() should not raise an error');
       // t.ok(rendered, test.name + ': amulet.string() should produce content');
 
-      // if (err) {
-        // console.error(err);
-        // console.error(err.trace);
-      // }
-
       rendered = rendered || ''; // in case there was an error, above, don't raise an exception
       var gold = test.expected;
       if (!process.env.WHITESPACE) {

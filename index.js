@@ -83,12 +83,10 @@ Manager.create = function(options, callback) {
 
   // precompile templates asynchronously
   lookup.find(function(err, filenames) {
-    // if (err) console.error('lookup error', err); // just ignore precompilation errors
     helpers.eachSeries(filenames, function(filename, callback) {
       manager.cache.get(filename, callback);
     }, function(err) {
       if (err) {
-        // console.error('manager lookup / precompilation error', err);
         manager.emit('error', err);
       }
       else {
