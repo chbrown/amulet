@@ -1,15 +1,16 @@
-'use strict'; /*jslint es5: true, node: true, indent: 2 */ /* globals setImmediate */
-var Renderer = require('./lib/renderer');
-var util = require('util');
-var events = require('events');
-
+'use strict'; /*jslint es5: true, node: true, indent: 2 */
+var helpers = require('./lib/helpers');
 var Cache = require('./lib/cache');
+var Renderer = require('./lib/renderer');
 
 var Manager = module.exports = function(lookup, parser) {
-  events.EventEmitter.call(this);
+  /** Manager: the main interface to amulet rendering.
+
+  - Creates readable streams
+  - Given a lookup and parser in the constuctor, handles fetching, parsing, and caching filenames
+  */
   this.cache = new Cache(lookup, parser);
 };
-util.inherits(Manager, events.EventEmitter);
 
 Manager.prototype.stream = function(template_names, context, asap) {
   /** `stream`: take a list of templates and render them into a
@@ -46,6 +47,22 @@ Manager.prototype.string = function(template_names, context, asap, callback) {
   });
 };
 
+Manager.prototype.warmup = function(filenames, callback) {
+  /** warmup: hit the cache for all of the provided filenames, in series
+
+  `filenames`: [String]
+  `callback`: function(Error | null, Manager | null)
+  */
+  var self = this;
+  helpers.eachSeries(filenames, function(filename, next) {
+    self.cache.get(filename, next);
+  }, function(err) {
+    if (callback) {
+      callback(err, self);
+    }
+  });
+};
+
 Manager.create = function(options, callback) {
   /** `create`: create a new manager from options. Uses the default
   string parser and filesystem lookup types.
@@ -64,7 +81,6 @@ Manager.create = function(options, callback) {
       function to call when finished creating, i.e., precompiling (optional).
       `options` is not optional if `callback` is specified.
   */
-  var helpers = require('./lib/helpers');
   var FilesystemLookup = require('./lib/lookups/filesystem');
   var StringParser = require('./lib/parsers/string');
 
@@ -75,34 +91,29 @@ Manager.create = function(options, callback) {
     close: '}}',
   }, options);
 
-
   var lookup = new FilesystemLookup(options.root);
   var parser = new StringParser(options);
-
   var manager = new Manager(lookup, parser);
 
   // precompile templates asynchronously
   lookup.find(function(err, filenames) {
-    helpers.eachSeries(filenames, function(filename, callback) {
-      manager.cache.get(filename, callback);
-    }, function(err) {
-      if (err) {
-        manager.emit('error', err);
-      }
-      else {
-        manager.emit('precompiled');
-      }
-
-      if (callback) {
-        callback(err, manager);
-      }
-    });
+    manager.warmup(filenames, callback);
   });
 
   return manager;
 };
 
 // Manager will also serve as a interface to the singleton manager, with certain defaults.
-var singleton = Manager.create(); // create manager with all defaults.
-Manager.stream = singleton.stream.bind(singleton);
-Manager.string = singleton.string.bind(singleton);
+Manager.set = function(options) {
+  /** set: allow setting options on the singleton, by replacing it with a new
+  manager. simply runs `create` with the given options (maybe none), and uses that.
+  */
+  var manager = Manager.create(options);
+  // create a singleton, and then attach it to the exported object, Manager
+  ['stream', 'string', 'warmup'].forEach(function(property) {
+    Manager[property] = manager[property].bind(manager);
+  });
+  return manager;
+};
+// create singleton manager with only the defaults
+Manager.set();
