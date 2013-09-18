@@ -204,11 +204,23 @@ Otherwise, you can access the local scope nakedly or with a `_`:
   can start rendering without its yield being specified yet.
 
 
-## Testing
+## Tests
 
-Just run `tap test` in the package's root directory after installing.
+**Travis CI Build Status**: [![Travis CI Build Status](https://api.travis-ci.org/chbrown/amulet.png)](https://travis-ci.org/chbrown/amulet)
 
-There are 14 failing tests right now, but it's not a big deal, since those are all edge cases of the full Mustache spec.
+There are 14 failing tests right now. but it's not a big deal, since those are all edge cases of the formal Mustache spec.
+
+### Testing locally
+
+You'll need to grab the submodules along with the repository to run tests:
+
+    git clone --recursive https://github.com/chbrown/amulet.git
+
+Or if you've already cloned the repository:
+
+    git submodule update --init --recursive
+
+And then just run `tap test` in the root directory (i.e., in the same directory as this `README.md` file).
 
 
 ## License
