@@ -5,7 +5,6 @@ var child_process = require('child_process');
 var tap = require('tap');
 
 var helpers = require('../lib/helpers');
-var mustache_repository = path.join(__dirname, 'mustache');
 
 
 function runSpec(spec, t, callback) {
@@ -43,47 +42,35 @@ function runSpec(spec, t, callback) {
   }, callback);
 }
 
-function run(err) {
-  tap.test('mustache specs', function(t) {
-    t.notOk(err, 'run initialization should not raise an error');
-    fs.readdir(path.join(mustache_repository, 'specs'), function(err, filenames) {
-      t.notOk(err, 'fs.readdir should not raise an error');
-      helpers.eachSeries(filenames, function(filename, callback) {
-        // skip non-json files
-        if (filename.match(/^[^~]+json$/)) {
-          var filepath = path.join(mustache_repository, 'specs', filename);
-          fs.readFile(filepath, {encoding: 'utf8'}, function(err, data) {
-            t.notOk(err, 'fs.readFile("' + filepath + '") should not raise an error');
-            var spec = JSON.parse(data);
-            runSpec(spec, t, callback);
-          });
-        }
-        else {
-          callback();
-        }
-      }, function(err) {
-        t.notOk(err, 'file read loop should not raise an error');
-        t.end();
-      });
+tap.test('mustache specs', function(t) {
+  // ./mustache-spec is a submodule cloned from https://github.com/mustache/spec.git
+  var specs_directory = path.join(__dirname, 'mustache-spec', 'specs');
+  fs.readdir(specs_directory, function(err, filenames) {
+    t.notOk(err, 'fs.readdir should not raise an error');
+    helpers.eachSeries(filenames, function(filename, callback) {
+      // skip non-json files
+      if (filename.match(/^[^~]+json$/)) {
+        var filepath = path.join(specs_directory, filename);
+        fs.readFile(filepath, {encoding: 'utf8'}, function(err, data) {
+          t.notOk(err, 'fs.readFile("' + filepath + '") should not raise an error');
+          var spec = JSON.parse(data);
+          runSpec(spec, t, callback);
+        });
+      }
+      else {
+        callback();
+      }
+    }, function(err) {
+      t.notOk(err, 'file read loop should not raise an error');
+      t.end();
     });
   });
-}
+});
 
-fs.exists(mustache_repository, function(exists) {
-  if (exists) {
-    run();
-  }
-  else {
-    console.error('Cloning mustache spec github repository');
-    child_process.exec('git clone git://github.com/mustache/spec.git ' + mustache_repository, {
-      cwd: __dirname,
-      env: process.env
-    }, function(err, stdout, stderr) {
-      if (err) {
-        console.error('STDOUT:' + stdout);
-        console.error('STDERR:' + stderr);
-      }
-      run(err);
-    });
-  }
+tap.test('mustache repository', function(t) {
+  var mustache_repository = path.join(__dirname, 'mustache-spec');
+  fs.exists(mustache_repository, function(exists) {
+    t.ok(exists, 'mustache repository should exist: ' + mustache_repository);
+    t.end();
+  });
 });
