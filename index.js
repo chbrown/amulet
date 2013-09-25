@@ -3,13 +3,14 @@ var helpers = require('./lib/helpers');
 var Cache = require('./lib/cache');
 var Renderer = require('./lib/renderer');
 
-var Manager = module.exports = function(lookup, parser) {
+var Manager = module.exports = function(lookup, parser, globals) {
   /** Manager: the main interface to amulet rendering.
 
   - Creates readable streams
   - Given a lookup and parser in the constuctor, handles fetching, parsing, and caching filenames
   */
   this.cache = new Cache(lookup, parser);
+  this.globals = globals;
 };
 
 Manager.prototype.stream = function(template_names, context, asap) {
@@ -24,7 +25,7 @@ Manager.prototype.stream = function(template_names, context, asap) {
       `asap == true` means we wait when the template requests a variable that
       is not yet available in the context. Defaults to false.
   */
-  var renderer = new Renderer(template_names, this.cache, context, asap);
+  var renderer = new Renderer(template_names, this.cache, context, this.globals, asap);
   renderer.start();
   return renderer;
 };
@@ -70,6 +71,9 @@ Manager.create = function(options, callback) {
   `options`: Object
       `root`: String
           template names are relative to this directory (default: 'templates')
+      `globals`: Object
+          context that is available to all templates at any time
+          (default: {JSON: JSON, Number: Number, Object: Object})
       `minify`: Boolean
           minify resulting html where possible (default: false)
       `open`: String
@@ -86,6 +90,11 @@ Manager.create = function(options, callback) {
 
   options = helpers.extend({}, {
     root: 'templates',
+    globals: {
+      'JSON': JSON,
+      'Number': Number,
+      'Object': Object,
+    },
     minify: false,
     open: '{{',
     close: '}}',
@@ -93,7 +102,7 @@ Manager.create = function(options, callback) {
 
   var lookup = new FilesystemLookup(options.root);
   var parser = new StringParser(options);
-  var manager = new Manager(lookup, parser);
+  var manager = new Manager(lookup, parser, options.globals);
 
   // precompile templates asynchronously
   lookup.find(function(err, filenames) {
