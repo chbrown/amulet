@@ -114,15 +114,26 @@ Manager.create = function(options, callback) {
 
 // Manager will also serve as a interface to the singleton manager, with certain defaults.
 Manager.set = function(options) {
-  /** set: allow setting options on the singleton, by replacing it with a new
-  manager. simply runs `create` with the given options (maybe none), and uses that.
+  /** set: Creates a singleton instance and attaches it to the main export, Manager.
+
+  Also attaches .stream() and .string() to the main export as helpers, e.g.:
+
+      var amulet = require('amulet');
+      // amulet.set({root: '/www/shared/templates'}); // <-- optional
+      ...
+        amulet.stream(['index.mu'], {user_id: '7009'}).pipe(res);
+
+  Equivalent to the following, for this module (but not for others):
+
+      amulet = require('amulet').create({root: '/path/to/templates'});
+      ...
+
   */
-  var manager = Manager.create(options);
-  // create a singleton, and then attach it to the exported object, Manager
-  ['stream', 'string', 'warmup'].forEach(function(property) {
-    Manager[property] = manager[property].bind(manager);
-  });
+  var manager = Manager.singleton = Manager.create(options);
+  Manager.stream = manager.stream.bind(manager);
+  Manager.string = manager.string.bind(manager);
   return manager;
 };
-// create singleton manager with only the defaults
+
+// initialize (create) singleton manager with the default options
 Manager.set();
