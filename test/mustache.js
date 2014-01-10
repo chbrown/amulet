@@ -8,9 +8,9 @@ var helpers = require('../lib/helpers');
 
 
 function runSpec(spec, t, callback) {
-  var amulet = require('..').create();
-
   helpers.eachSeries(spec.tests, function(test, callback) {
+    var amulet = require('..').create();
+
     Object.keys(test.partials || {}).forEach(function(partial_name) {
       var partial_value = test.partials[partial_name];
       amulet.cache.templates[partial_name] = amulet.cache.parser.parse(partial_value);
