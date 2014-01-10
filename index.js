@@ -113,7 +113,7 @@ Manager.create = function(options, callback) {
 };
 
 // Manager will also serve as a interface to the singleton manager, with certain defaults.
-Manager.set = function(options) {
+Manager.set = function(options, callback) {
   /** set: Creates a singleton instance and attaches it to the main export, Manager.
 
   Also attaches .stream() and .string() to the main export as helpers, e.g.:
@@ -129,7 +129,7 @@ Manager.set = function(options) {
       ...
 
   */
-  var manager = Manager.singleton = Manager.create(options);
+  var manager = Manager.singleton = Manager.create(options, callback);
   Manager.stream = manager.stream.bind(manager);
   Manager.string = manager.string.bind(manager);
   return manager;
