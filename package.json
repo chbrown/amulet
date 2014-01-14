@@ -1,6 +1,6 @@
 {
   "name": "amulet",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "As-soon-as-possible streaming async mustache templating",
   "keywords": [
     "template",
