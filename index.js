@@ -1,4 +1,4 @@
-'use strict'; /*jslint es5: true, node: true, indent: 2 */
+/*jslint node: true */
 var helpers = require('./lib/helpers');
 var Cache = require('./lib/cache');
 var Renderer = require('./lib/renderer');

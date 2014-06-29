@@ -1,4 +1,4 @@
-'use strict'; /*jslint es5: true, node: true, indent: 2 */ /* globals setImmediate */
+/*jslint node: true */
 var http = require('http');
 var portfinder = require('portfinder');
 var amulet = require('../..');
