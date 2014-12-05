@@ -206,7 +206,7 @@ Otherwise, you can access the local scope nakedly or with a `_`:
 
 ## Tests
 
-**Travis CI Build Status**: [![Travis CI Build Status](https://api.travis-ci.org/chbrown/amulet.png)](https://travis-ci.org/chbrown/amulet)
+**Travis CI Build Status**: [![Travis CI Build Status](https://api.travis-ci.org/chbrown/amulet.svg)](https://travis-ci.org/chbrown/amulet)
 
 There are 14 failing tests right now. but it's not a big deal, since those are all edge cases of the formal Mustache spec.
 
